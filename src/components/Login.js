@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 const Login = (props) => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   let navigate = useNavigate();
-  const host = "https://inotebook-opo6.onrender.com/";
+  const host = "https://inotebook-api-30tl.onrender.com/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
