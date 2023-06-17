@@ -5,7 +5,7 @@ import profileImage from "./profileImage.png";
 import dateFormat from "dateformat";
 
 const Profile = () => {
-  const host = "https://inotebook-api.onrender.com/";
+  const host = "https://inotebook-opo6.onrender.com/";
   const [user, setUser] = useState({ name: "", email: "", date: "" });
   const navigate = useNavigate();
 
