@@ -90,7 +90,7 @@ const Notes = (props) => {
           </div>
         </div>
       </div>
-      <div className="container row my-3">
+      <div className="container row mh-80 my-3">
         <h2>Your Notes</h2>
         {loadingDotLoader ? (
           <div className="my-3 mx-2">
