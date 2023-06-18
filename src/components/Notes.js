@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DotLoader } from "react-spinner-overlay";
 import noteContext from "../context/notes/noteContext";
 import AddNote from "./AddNote";
 import NoteItem from "./NoteItem";
 
 const Notes = (props) => {
   const context = useContext(noteContext);
-  const { notes, getNotes, editNote } = context;
+  const { notes, getNotes, editNote, loadingDotLoader } = context;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,9 +32,9 @@ const Notes = (props) => {
     setNote({ ...note, [e.target.name]: e.target.value });
   };
 
-  const handleClick = (e) => {
-    editNote(note.id, note.etitle, note.edescription, note.etag);
-    refClose.current.click();
+  const handleClick = async (e) => {
+    ref.current.click();
+    await editNote(note.id, note.etitle, note.edescription, note.etag);
     props.showAlert("Updated Note Successfully", "success");
   };
 
@@ -91,10 +92,17 @@ const Notes = (props) => {
       </div>
       <div className="container row my-3">
         <h2>Your Notes</h2>
-        <div className="container mx-2">{notes.length === 0 && "No notes to display"}</div>
-        {notes.map((note) => {
-          return <NoteItem key={note._id} updateNote={updateNote} note={note} showAlert={props.showAlert} />;
-        })}
+        {loadingDotLoader ? (
+          <div className="my-3 mx-2">
+          <DotLoader color="#212529" size={9}/>
+          </div>
+        ) : notes.length === 0 ? (
+          <div className="container mx-2">{"No notes to display"}</div>
+        ) : (
+          notes.map((note) => {
+            return <NoteItem key={note._id} updateNote={updateNote} note={note} showAlert={props.showAlert} />;
+          })
+        )}
       </div>
     </>
   );

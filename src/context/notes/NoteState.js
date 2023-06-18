@@ -6,10 +6,13 @@ const NoteState = (props) => {
   const notesInitial = [];
 
   const [notes, setNotes] = useState(notesInitial);
+  const [loadingDotLoader, setLoadingDotLoader] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //Get all notes
   const getNotes = async () => {
     //API CALL
+    setLoadingDotLoader(true);
     const response = await fetch(`${host}api/notes/fetchallnotes`, {
       method: "GET",
       headers: {
@@ -19,10 +22,12 @@ const NoteState = (props) => {
     });
     const json = await response.json();
     setNotes(json);
+    setLoadingDotLoader(false);
   };
 
   //Add a Note
   const addNote = async (title, description, tag) => {
+    setLoading(true);
     //API CALL
     const response = await fetch(`${host}api/notes/addnote`, {
       method: "POST",
@@ -34,11 +39,13 @@ const NoteState = (props) => {
     });
     const note = await response.json();
     setNotes(notes.concat(note));
+    setLoading(false);
   };
 
   //Delete a Note
   const deleteNote = async (id) => {
     //API CALL
+    setLoading(true);
     await fetch(`${host}api/notes/deletenote/${id}`, {
       method: "DELETE",
       headers: {
@@ -51,11 +58,13 @@ const NoteState = (props) => {
       return note._id !== id;
     });
     setNotes(newNotes);
+    setLoading(false);
   };
 
   //Edit a Note
   const editNote = async (id, title, description, tag) => {
     //API CALL
+    setLoading(true);
     await fetch(`${host}api/notes/updatenote/${id}`, {
       method: "PUT",
       headers: {
@@ -77,9 +86,10 @@ const NoteState = (props) => {
       }
     }
     setNotes(newNotes);
+    setLoading(false);
   };
 
-  return <NoteContext.Provider value={{ notes, addNote, deleteNote, editNote, getNotes }}>{props.children}</NoteContext.Provider>;
+  return <NoteContext.Provider value={{ notes, addNote, deleteNote, editNote, getNotes, loading, loadingDotLoader }}>{props.children}</NoteContext.Provider>;
 };
 
 export default NoteState;

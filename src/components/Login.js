@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { RouletteSpinnerOverlay } from 'react-spinner-overlay';
 
 const Login = (props) => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   let navigate = useNavigate();
   const host = "https://inotebook-api-30tl.onrender.com/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const response = await fetch(`${host}api/auth/login`, {
       method: "POST",
       headers: {
@@ -16,6 +19,7 @@ const Login = (props) => {
       body: JSON.stringify({ email: credentials.email, password: credentials.password }),
     });
     const json = await response.json();
+    setLoading(false);
     if (json.success) {
       // Save the auth token and redirect
       localStorage.setItem("token", json.authtoken);
@@ -32,6 +36,7 @@ const Login = (props) => {
 
   return (
     <div className="container my-2">
+      <RouletteSpinnerOverlay loading={loading} size ={50} color="#212529" overlayColor="rgb(255 255 255 / 40%)"/>
       <h1 className="mb-3">Welcome to iNotebook!</h1>
       <span>Login to access all the features of iNotebook! Don't have an account? Don't worry! Click <Link className="link-opacity-50-hover" to="/signup">here</Link> to sign up!</span>
 

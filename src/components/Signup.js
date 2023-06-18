@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RouletteSpinnerOverlay } from "react-spinner-overlay";
 
 const Signup = (props) => {
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "" });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const host = "https://inotebook-api-30tl.onrender.com/"
+  const host = "https://inotebook-api-30tl.onrender.com/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password,cpassword } = credentials;
+    const { name, email, password, cpassword } = credentials;
     if (password !== cpassword) {
       props.showAlert("Password and Confirm Password does not match.", "warning");
     } else {
+      setLoading(true);
       const response = await fetch(`${host}api/auth/createuser`, {
         method: "POST",
         headers: {
@@ -20,6 +23,7 @@ const Signup = (props) => {
         body: JSON.stringify({ name, email, password }),
       });
       const json = await response.json();
+      setLoading(false);
       if (json.success) {
         // Save the auth token and redirect
         localStorage.setItem("token", json.authtoken);
@@ -36,6 +40,7 @@ const Signup = (props) => {
   };
   return (
     <div className="container my-2">
+      <RouletteSpinnerOverlay loading={loading} size={50} color="#212529" overlayColor="rgb(255 255 255 / 40%)" />
       <h1 className="mb-3">Sign Up to use iNotebook</h1>
       <span>Don't have an account? Don't worry! Sign up now to access all the features of iNotebook!</span>
       <form className="my-3" onSubmit={handleSubmit}>
@@ -43,13 +48,13 @@ const Signup = (props) => {
           <label htmlFor="name" className="form-label">
             Name
           </label>
-          <input type="text" autoComplete = "on" className="form-control" name="name" id="name" aria-describedby="emailHelp" onChange={onChange} />
+          <input type="text" autoComplete="on" className="form-control" name="name" id="name" aria-describedby="emailHelp" onChange={onChange} />
         </div>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email address
           </label>
-          <input type="email" autoComplete = "on" className="form-control" name="email" id="email" aria-describedby="emailHelp" onChange={onChange} />
+          <input type="email" autoComplete="on" className="form-control" name="email" id="email" aria-describedby="emailHelp" onChange={onChange} />
           <div id="emailHelp" className="form-text">
             We'll never share your email with anyone else.
           </div>
@@ -58,13 +63,13 @@ const Signup = (props) => {
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input type="password" autoComplete = "on" className="form-control" id="password" name="password" onChange={onChange} minLength={5} required />
+          <input type="password" autoComplete="on" className="form-control" id="password" name="password" onChange={onChange} minLength={5} required />
         </div>
         <div className="mb-3">
           <label htmlFor="cpassword" className="form-label">
             Confirm Password
           </label>
-          <input type="password" autoComplete = "on" className="form-control" id="cpassword" name="cpassword" onChange={onChange} minLength={5} required />
+          <input type="password" autoComplete="on" className="form-control" id="cpassword" name="cpassword" onChange={onChange} minLength={5} required />
         </div>
         <button type="submit" className="btn btn-primary">
           Submit

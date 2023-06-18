@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { RouletteSpinnerOverlay } from 'react-spinner-overlay';
 import profileImage from "./profileImage.png";
 import dateFormat from "dateformat";
 
 const Profile = () => {
   const host = "https://inotebook-api-30tl.onrender.com/";
   const [user, setUser] = useState({ name: "", email: "", date: "" });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
       //API Call
       const fetchData = async () => {
+        setLoading(true);
         const response = await fetch(`${host}api/auth/getuser`, {
           method: "POST",
           headers: {
@@ -21,6 +24,7 @@ const Profile = () => {
         });
         const json = await response.json();
         setUser({ name: json.name, email: json.email, date: json.date });
+        setLoading(false);
       };
       fetchData();
     } else {
@@ -31,6 +35,7 @@ const Profile = () => {
 
   return (
     <div className="container py-5 h-100">
+      <RouletteSpinnerOverlay loading={loading} size ={50} color="#212529" overlayColor="rgb(255 255 255 / 40%)"/>
       <div className="row d-flex justify-content-center align-items-center h-150">
         <div className="col col-lg-6 mb-4 mb-lg-0">
           <div className="card mb-3" style={{ borderRadius: ".5rem" }}>

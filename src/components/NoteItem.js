@@ -14,8 +14,8 @@ const NoteItem = (props) => {
           <p className="card-text">{note.description}</p>
           <i
             className="fa-regular fa-trash-can"
-            onClick={() => {
-              deleteNote(note._id);
+            onClick={async () => {
+              await deleteNote(note._id);
               showAlert("Deleted Note Successfully", "success");
             }}></i>
           <i className="fa-regular fa-pen-to-square mx-4" onClick={() => {updateNote(note)}
